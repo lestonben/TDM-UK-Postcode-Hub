@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Postcode Hub - Update Dashboard</title>
+    <!-- Keep the exact same layout stylesheets -->
+    <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+
+<!-- Top Navigation Bar (Untouched) -->
+<header class="navbar">
+    <div class="nav-left">
+        <div class="logo">📍</div>
+        <h1>UK Postcode Hub</h1>
+    </div>
+    <div class="nav-right">
+        <span class="user-profile">Welcome, User</span>
+        <button id="logoutBtn" class="logout-btn">Log Out</button>
+    </div>
+</header>
+
+<div class="dashboard-container">
+    <!-- Sidebar (Untouched structure, but shifted active state) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button id="sidebarToggle" class="toggle-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>
+            </button>
+        </div>
+
+        <!-- REMOVED active class here -->
+        <a href="/tdm/dashboard/main" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,115.55V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V160H112v48a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-72.73a16,16,0,0,1,21.66,0l80,72.73A16,16,0,0,1,224,115.55Z"></path></svg>
+            <span class="sidebar-text">Home</span>
+        </a>
+
+        <!-- ADDED active class here -->
+        <a href="/tdm/dashboard/update" class="sidebar-item active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-157.12,74.09l-22.6,22.6A8,8,0,0,1,31,219.31l40-40a8,8,0,0,1,11.31,0l40,40a8,8,0,0,1-11.31,11.32L92.1,211.9A80,80,0,1,0,48,128a8,8,0,0,1-16,0,96,96,0,0,1,192,0Z"></path></svg>
+            <span class="sidebar-text">Update</span>
+        </a>
+    </aside>
+
+    <!-- Main Content Area (Only swap out this inner content!) -->
+    <main class="main-content">
+        <h2>Postcode Update</h2>
+
+        <div class="grid-layout">
+            <!-- Left Column: Query Mapping Check -->
+            <section class="card-panel">
+                <div class="panel-header">Query Postal Mapping</div>
+                <div class="card-body">
+                    <!-- Wrap the label and search elements in this group -->
+                    <div class="management-form-group">
+                        <label for="queryPostcode">Search Postcode</label>
+                        <!-- Put the input and button inside this wrapper to make them inline -->
+                        <div class="search-input-wrapper">
+                            <!-- Wrap input and its dropdown together -->
+                            <div style="position: relative; flex: 1;">
+                                <input type="text" id="queryPostcode" placeholder="e.g. SW1A 1AA" autocomplete="off">
+                                <div id="postcodeSuggestions" class="autocomplete-dropdown" style="display: none; position: absolute; width: 100%; z-index: 10;"></div>
+                            </div>
+                            <button type="button" id="querySearchBtn" class="action-inline-btn" disabled>Search</button>
+                        </div>
+                    </div>
+                    <div id="queryResultDisplay" class="query-result-box">
+                        <span class="placeholder-text">Enter a postcode above to look up its coordinates mapping.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Create/Update Form -->
+            <section class="card-panel">
+                <div class="panel-header">Create or Update Coordinates Mapping</div>
+                <form id="updatePostcodeForm" class="card-body">
+                    <!-- Form group for Postcode -->
+                    <div class="management-form-group">
+                        <label for="inputPostcode">Target Postcode</label>
+                        <input type="text" id="inputPostcode" name="postcode" placeholder="e.g. SW1A 1AA" required autocomplete="off">
+                    </div>
+
+                    <!-- Row wrapper to put Latitude and Longitude side-by-side -->
+                    <div class="coordinates-row">
+                        <div class="management-form-group">
+                            <label for="inputLatitude">Latitude</label>
+                            <input type="number" id="inputLatitude" name="latitude" step="any" placeholder="e.g. 51.5007" required>
+                        </div>
+                        <div class="management-form-group">
+                            <label for="inputLongitude">Longitude</label>
+                            <input type="number" id="inputLongitude" name="longitude" step="any" placeholder="e.g. -0.1246" required>
+                        </div>
+                    </div>
+
+                    <div id="updateStatusBanner" class="error-banner message-banner hidden"></div>
+
+                    <button type="submit" id="btnSubmitUpdate" class="search-submit-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-157.12,74.09l-22.6,22.6A8,8,0,0,1,31,219.31l40-40a8,8,0,0,1,11.31,0l40,40a8,8,0,0,1-11.31,11.32L92.1,211.9A80,80,0,1,0,48,128a8,8,0,0,1-16,0,96,96,0,0,1,192,0Z"></path></svg>
+                        Save Changes
+                    </button>
+                </form>
+            </section>
+        </div>
+    </main>
+</div>
+
+<!-- Connect a new script file handling the update logic, or keep the sidebar logic shared -->
+<script type="module" src="/dashboard/update/update.js"></script>
+</body>
+</html>

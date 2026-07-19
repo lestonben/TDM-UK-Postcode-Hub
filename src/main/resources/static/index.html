@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Postcode Hub - Optimise Geographic Data</title>
+
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+<nav>
+    <div class="logo">📍 UK Postcode Hub</div>
+</nav>
+
+<main>
+    <!-- Hero Message -->
+    <div class="hero">
+        <h1>Optimise UK geographic data flawlessly.</h1>
+        <p>A beautiful, lightweight administration platform for processing, validating, and mapping UK postcodes, coordinates, and regional boundary datasets seamlessly.</p>
+    </div>
+
+    <!-- Dynamic Card -->
+    <div class="auth-card">
+
+        <!-- 🚪 LOGIN SUB-CARD -->
+        <div id="loginSection">
+            <h2>Welcome Back</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username or Email</label>
+                    <input type="text" id="userId" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="userPass" required>
+                </div>
+                <div id="loginError" class="error-msg hidden"></div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+        </div>
+
+        <!-- 📝 REGISTER ACCORDION SECTION -->
+        <div id="registerSection">
+            <!-- Trigger Header -->
+
+            <button type="button" onclick="toggleAuthViews('register')" id="signupBar" class="toggle-bar">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; text-align: left;">
+                        <span style="color: #0f172a; font-size: 0.95rem; font-weight: 700;">New to the platform?</span>
+                        <span style="color: #64748b; font-size: 0.8rem; font-weight: 400; margin-top: 2px;">Create a new database account</span>
+                    </div>
+                </div>
+                <!-- Clean, modern arrow indicator instead of a bulky box button -->
+                <span class="arrow-icon">➔</span>
+            </button>
+
+            <!-- Signup Fields Drawer -->
+            <div id="registerFormFields" class="hidden" style="margin-top: 24px;">
+                <h2>Create Account</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="usernameInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="emailInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="passInput" required>
+                    </div>
+                    <div id="regError" class="error-msg hidden"></div>
+                    <button type="submit" class="btn-register">Register</button>
+                </form>
+
+                <button type="button" onclick="toggleAuthViews('login')" id="loginBar" class="toggle-bar login-return-bar hidden">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1rem;">👤</span>
+                        <span style="color: #475569; font-size: 0.9rem; font-weight: 600;">Already have an account?</span>
+                    </div>
+                    <span class="back-arrow-icon">➔</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</main>
+<script type="module" src="/index.js"></script>
+</body>
+
+<footer>
+    &copy; 2026 UK Postcode Hub by Ben. Built with Spring Boot. All rights reserved.
+</footer>
+</html>
