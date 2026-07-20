@@ -5,17 +5,17 @@ import com.project.tdm.application.repository.UserRepo;
 import com.project.tdm.application.service.UserService;
 import com.project.tdm.security.util.HashPassUtil;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private UserRepo userRepo;
 
@@ -25,11 +25,21 @@ public class UserServiceImpl implements UserService {
     }
 
     private Optional<String> checkDuplicateUsername(UserEntity user) {
-        return userRepo.existsByUsername(user.getUsername()) ? Optional.of("Username has been taken.") : Optional.empty();
+        Optional<String> usernameFound = userRepo.existsByUsername(user.getUsername()) ?
+                Optional.of("Username has been taken.") :
+                Optional.empty();
+        logger.info("checkDuplicateUsername(): username = {}, isFound = {}", user.getUsername(), usernameFound.isPresent());
+
+        return usernameFound;
     }
 
     private Optional<String> checkDuplicateEmail(UserEntity user) {
-        return userRepo.existsByEmail(user.getEmail()) ? Optional.of("Email has been taken.") : Optional.empty();
+        Optional<String> emailFound = userRepo.existsByEmail(user.getEmail()) ?
+                Optional.of("Email has been taken.") :
+                Optional.empty();
+        logger.info("checkDuplicateEmail(): email = {}, isFound = {}", user.getEmail(), emailFound.isPresent());
+
+        return emailFound;
     }
 
     @Transactional
@@ -63,6 +73,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserByUsername(String username) {
-        return userRepo.findByUsername(username).orElse(null);
+        UserEntity userEntity = userRepo.findByUsername(username).orElse(null);
+        logger.info("getUserByUsername(): username = {}, resultFound = {}", username, (userEntity != null));
+
+        return userEntity;
     }
 }

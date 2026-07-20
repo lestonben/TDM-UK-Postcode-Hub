@@ -80,4 +80,17 @@ public class RouteDetailsDTO implements Serializable {
     public void setDistance(double distance) {
         this.distance = distance;
     }
+
+    @Override
+    public String toString() {
+        return "RouteDetailsDTO{" +
+                "fromPostcode='" + fromPostcode + '\'' +
+                ", fromLat=" + fromLat +
+                ", fromLng=" + fromLng +
+                ", toPostcode='" + toPostcode + '\'' +
+                ", toLat=" + toLat +
+                ", toLng=" + toLng +
+                ", distance=" + distance +
+                '}';
+    }
 }
