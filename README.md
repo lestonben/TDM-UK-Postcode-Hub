@@ -54,13 +54,13 @@
       <td>Redirects to dashboard if authenticated; else displays home page.</td>
     </tr>
     <tr>
-      <td>🔑</td>
+      <td>🌐</td>
       <td>POST</td>
       <td><code>/api/login</code></td>
       <td>Authenticates user and sets JWT cookie.</td>
     </tr>
     <tr>
-      <td>🔑</td>
+      <td>🌐</td>
       <td>POST</td>
       <td><code>/api/register</code></td>
       <td>Registers a new user account.</td>
