@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -18,11 +20,23 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        // Create an MVC matcher factory that uses the standard AntPathMatcher
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/tdm/home","/api/login","/api/logout", "/api/register", "/util/utils.js", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
+                        // Add these to permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/"),
+                                mvcMatcherBuilder.pattern("/tdm/home"),
+                                mvcMatcherBuilder.pattern("/api/**"),
+                                mvcMatcherBuilder.pattern("/assets/**"),
+                                mvcMatcherBuilder.pattern("/util/**"),
+                                mvcMatcherBuilder.pattern("/*.html"),
+                                mvcMatcherBuilder.pattern("/*.css"),
+                                mvcMatcherBuilder.pattern("/*.js")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/dashboard/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
