@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const usernameEmail = document.getElementById('userId').value;
     const password = document.getElementById('userPass').value;
 
-    if (!inputValidations(usernameEmail, password)) {
+    if (!loginInputValidations(usernameEmail, password)) {
         return;
     }
 
@@ -45,10 +45,19 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const username = document.getElementById('usernameInput').value;
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passInput').value;
+
+    if (!registerInputValidations(username, email, password)) {
+        return;
+    }
+
     const payload = {
-        username: document.getElementById('usernameInput').value,
-        email: document.getElementById('emailInput').value,
-        password: document.getElementById('passInput').value
+        username: username,
+        email: email,
+        password: password
     };
 
     try {
@@ -65,7 +74,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 });
 
 // --- Input Field Validation ---
-function inputValidations(usernameEmail, password) {
+function loginInputValidations(usernameEmail, password) {
     if (!usernameEmail || usernameEmail.trim() === "") {
         Utils.showError('loginError', "Please fill in your username or email.");
         return false;
@@ -73,6 +82,27 @@ function inputValidations(usernameEmail, password) {
 
     if (!password || password.trim() === "") {
         Utils.showError('loginError', "Please fill in your password.");
+        return false;
+    }
+    return true;
+}
+
+function registerInputValidations(username, email, password) {
+    // Check if username is empty
+    if (!username || username.trim() === "") {
+        Utils.showError('regError', "Please fill in your username.");
+        return false;
+    }
+
+    // Check if email is empty
+    if (!email || email.trim() === "") {
+        Utils.showError('regError', "Please fill in your email.");
+        return false;
+    }
+
+    // Check if password is empty
+    if (!password || password.trim() === "") {
+        Utils.showError('regError', "Please fill in your password.");
         return false;
     }
     return true;
