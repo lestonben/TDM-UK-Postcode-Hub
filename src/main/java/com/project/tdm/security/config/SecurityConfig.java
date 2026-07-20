@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -20,23 +21,33 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
 
     @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.sendRedirect(request.getContextPath() + "/tdm/home");
+        };
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        // Create an MVC matcher factory that uses the standard AntPathMatcher
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint())
+                )
                 .authorizeHttpRequests(auth -> auth
-                        // Add these to permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/"),
+                        .requestMatchers(
+                                mvcMatcherBuilder.pattern("/"),
                                 mvcMatcherBuilder.pattern("/tdm/home"),
-                                mvcMatcherBuilder.pattern("/api/**"),
+                                mvcMatcherBuilder.pattern("/api/login"),
+                                mvcMatcherBuilder.pattern("/api/register"),
                                 mvcMatcherBuilder.pattern("/assets/**"),
-                                mvcMatcherBuilder.pattern("/util/**"),
                                 mvcMatcherBuilder.pattern("/*.html"),
                                 mvcMatcherBuilder.pattern("/*.css"),
-                                mvcMatcherBuilder.pattern("/*.js")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/dashboard/**")).permitAll()
+                                mvcMatcherBuilder.pattern("/*.js"),
+                                mvcMatcherBuilder.pattern(".ico")
+                                ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -46,19 +46,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return "/".equals(path)
                 || "/tdm/home".equals(path)
                 || "/api/login".equals(path)
-                || "/api/logout".equals(path)
                 || "/api/register".equals(path)
+                || path.startsWith("/assets/")
                 || path.endsWith(".html")
                 || path.endsWith(".js")
                 || path.endsWith(".css")
-                || path.endsWith(".ico")
-                || path.contains("/util/");
+                || path.endsWith(".ico");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tokenStr = resolveToken(request);
-
+        System.out.println("jwtauthfilter first");
         if (shouldNotFilter(request) || (tokenStr == null || tokenStr.trim().isEmpty())) {
             filterChain.doFilter(request, response);
             return;
