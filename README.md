@@ -95,6 +95,12 @@
       <td><code>/api/postcodes/searchQuery</code></td>
       <td>Executes search queries against the database.</td>
     </tr>
+    <tr>
+      <td>🔑</td>
+      <td>POST</td>
+      <td><code>/api/postcodes/insertOrUpdate</code></td>
+      <td>Inserts or updates postcode records.</td>
+    </tr>
   </tbody>
 </table>
 
