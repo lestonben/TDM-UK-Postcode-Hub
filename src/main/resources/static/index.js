@@ -1,4 +1,4 @@
-import * as Utils from './util/utils.js';
+import * as Utils from '/assets/util/utils.js';
 
 // --- Event Handlers ---
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -36,7 +36,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         document.documentElement.innerHTML = await pageResponse.text();
         window.history.pushState({}, '', '/tdm/dashboard/main');
 
-        Utils.reloadScript('/dashboard/main/main.js', 'dashboardEvents', { username: usernameEmail });
+        Utils.reloadScript('assets/dashboard/main.js', 'dashboardEvents', { username: usernameEmail });
 
     } catch (err) {
         Utils.showError('loginError', "Unable to connect to the server. Please check your network.");
