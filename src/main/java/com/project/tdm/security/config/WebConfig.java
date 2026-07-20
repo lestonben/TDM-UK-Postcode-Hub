@@ -12,9 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/tdm/home").setViewName("forward:/index.html");
         registry.addRedirectViewController("/", "/tdm/home");
 
-        registry.addViewController("/tdm/dashboard/main").setViewName("forward:/dashboard/main/main.html");
+        registry.addViewController("/tdm/dashboard/main").setViewName("forward:/assets/dashboard/main.html");
 
-        registry.addViewController("/tdm/dashboard/update").setViewName("forward:/dashboard/update/update.html");
+        registry.addViewController("/tdm/dashboard/update").setViewName("forward:/assets/dashboard/update.html");
     }
 
 }
