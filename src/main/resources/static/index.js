@@ -7,6 +7,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const usernameEmail = document.getElementById('userId').value;
     const password = document.getElementById('userPass').value;
 
+    if (!inputValidations(usernameEmail, password)) {
+        return;
+    }
+
     const payload = {
             usernameEmail: usernameEmail,
             password: password
@@ -59,6 +63,20 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         Utils.showError('regError', "Unable to connect to the server. Please check your network.");
     }
 });
+
+// --- Input Field Validation ---
+function inputValidations(usernameEmail, password) {
+    if (!usernameEmail || usernameEmail.trim() === "") {
+        Utils.showError('loginError', "Please fill in your username or email.");
+        return false;
+    }
+
+    if (!password || password.trim() === "") {
+        Utils.showError('loginError', "Please fill in your password.");
+        return false;
+    }
+    return true;
+}
 
 // --- View Toggling & Navigation ---
 function toggleAuthViews(target) {
