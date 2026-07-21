@@ -1,4 +1,4 @@
-import * as Utils from '/assets/util/utils.js';
+import * as Utils from '/js/utils.js';
 
 // Centralized reference states for DOM Nodes to prevent scope leaking duplication
 let fromInput, toInput, submitBtn, fromDropdown, toDropdown, hintContainer;

@@ -42,10 +42,9 @@ public class SecurityConfig {
                                 mvcMatcherBuilder.pattern("/tdm/home"),
                                 mvcMatcherBuilder.pattern("/api/login"),
                                 mvcMatcherBuilder.pattern("/api/register"),
-                                mvcMatcherBuilder.pattern("/assets/**"),
-                                mvcMatcherBuilder.pattern("/*.html"),
-                                mvcMatcherBuilder.pattern("/*.css"),
-                                mvcMatcherBuilder.pattern("/*.js"),
+                                mvcMatcherBuilder.pattern("/*/*.html"),
+                                mvcMatcherBuilder.pattern("/*/*.css"),
+                                mvcMatcherBuilder.pattern("/*/*.js"),
                                 mvcMatcherBuilder.pattern(".ico")
                                 ).permitAll()
                         .anyRequest().authenticated()

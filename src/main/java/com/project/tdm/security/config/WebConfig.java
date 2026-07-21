@@ -9,12 +9,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/tdm/home").setViewName("forward:/index.html");
+        registry.addViewController("/tdm/home").setViewName("forward:/templates/index.html");
         registry.addRedirectViewController("/", "/tdm/home");
 
-        registry.addViewController("/tdm/dashboard/main").setViewName("forward:/assets/dashboard/main.html");
+        registry.addViewController("/tdm/dashboard/main").setViewName("forward:/templates/dashboard-main.html");
 
-        registry.addViewController("/tdm/dashboard/update").setViewName("forward:/assets/dashboard/update.html");
+        registry.addViewController("/tdm/dashboard/update").setViewName("forward:/templates/dashboard-update.html");
     }
 
 }
