@@ -162,24 +162,24 @@ redis-cli ping
     <li>
         <strong><code style="font-size: 115%; font-family: inherit;">/tdm/home</code> (Login)</strong>
         <br>
-        <img src="screenshots/login_ui.png" alt="Login Screen" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/login_ui.png" alt="Login Screen" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
     <br>
     <li>
         <strong><code style="font-size: 115%; font-family: inherit;">/tdm/dashboard/main</code> (Search Postcode)</strong>
         <br>
-        <img src="screenshots/main_search_ui.png" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/main_search_ui.png" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
     <br>
     <li>
         <strong><code style="font-size: 115%; font-family: inherit;">/tdm/dashboard/main</code> (Display Route Result)</strong>
         <br>
-        <img src="screenshots/main_result_ui.png" alt="Search Results" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/main_result_ui.png" alt="Search Results" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
     <br>
     <li>
         <strong><code style="font-size: 115%; font-family: inherit;">/tdm/dashboard/update</code> (Database Management)</strong>
         <br>
-        <img src="screenshots/update_ui.png" alt="Update Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/update_ui.png" alt="Update Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
 </ul>
