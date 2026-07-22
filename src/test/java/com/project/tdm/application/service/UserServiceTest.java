@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -22,6 +21,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepo userRepo;
+
+    @Mock
+    private HashPassUtil hashPassUtil; // Injected as a mock bean instead of static
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -46,20 +48,14 @@ class UserServiceTest {
 
         when(userRepo.existsByEmail("new@example.com")).thenReturn(false);
         when(userRepo.existsByUsername("newuser")).thenReturn(false);
+        when(hashPassUtil.hashPassword("plainPassword")).thenReturn("hashedPassword");
 
-        // Mock the static utility class for password hashing
-        try (MockedStatic<HashPassUtil> mockedHashUtil = mockStatic(HashPassUtil.class)) {
-            mockedHashUtil.when(HashPassUtil::generateSalt).thenReturn("mockSalt");
-            mockedHashUtil.when(() -> HashPassUtil.hashPassword("plainPassword", "mockSalt")).thenReturn("hashedPassword");
+        // Act
+        assertDoesNotThrow(() -> userService.registerUser(inputUser));
 
-            // Act
-            assertDoesNotThrow(() -> userService.registerUser(inputUser));
-
-            // Assert
-            assertEquals("mockSalt", inputUser.getSalt());
-            assertEquals("hashedPassword", inputUser.getPassword());
-            verify(userRepo, times(1)).save(inputUser);
-        }
+        // Assert
+        assertEquals("hashedPassword", inputUser.getPassword());
+        verify(userRepo, times(1)).save(inputUser);
     }
 
     @Test
@@ -113,21 +109,16 @@ class UserServiceTest {
         UserEntity databaseUser = new UserEntity();
         databaseUser.setUsername("testuser");
         databaseUser.setPassword("hashedPassword");
-        databaseUser.setSalt("userSalt");
 
         when(userRepo.findByUsername("testuser")).thenReturn(Optional.of(databaseUser));
+        when(hashPassUtil.verifyPassword("correctPassword", "hashedPassword")).thenReturn(true);
 
-        try (MockedStatic<HashPassUtil> mockedHashUtil = mockStatic(HashPassUtil.class)) {
-            mockedHashUtil.when(() -> HashPassUtil.verifyPassword("correctPassword", "hashedPassword", "userSalt"))
-                    .thenReturn(true);
+        // Act
+        UserEntity result = userService.loginUser(loginAttempt);
 
-            // Act
-            UserEntity result = userService.loginUser(loginAttempt);
-
-            // Assert
-            assertNotNull(result);
-            assertEquals("testuser", result.getUsername());
-        }
+        // Assert
+        assertNotNull(result);
+        assertEquals("testuser", result.getUsername());
     }
 
     @Test
@@ -140,22 +131,16 @@ class UserServiceTest {
         UserEntity databaseUser = new UserEntity();
         databaseUser.setEmail("test@example.com");
         databaseUser.setPassword("hashedPassword");
-        databaseUser.setSalt("userSalt");
 
-        // First lambda condition flatMap(username) evaluates to empty because username is null
         when(userRepo.findByEmail("test@example.com")).thenReturn(Optional.of(databaseUser));
+        when(hashPassUtil.verifyPassword("correctPassword", "hashedPassword")).thenReturn(true);
 
-        try (MockedStatic<HashPassUtil> mockedHashUtil = mockStatic(HashPassUtil.class)) {
-            mockedHashUtil.when(() -> HashPassUtil.verifyPassword("correctPassword", "hashedPassword", "userSalt"))
-                    .thenReturn(true);
+        // Act
+        UserEntity result = userService.loginUser(loginAttempt);
 
-            // Act
-            UserEntity result = userService.loginUser(loginAttempt);
-
-            // Assert
-            assertNotNull(result);
-            assertEquals("test@example.com", result.getEmail());
-        }
+        // Assert
+        assertNotNull(result);
+        assertEquals("test@example.com", result.getEmail());
     }
 
     @Test
@@ -184,21 +169,16 @@ class UserServiceTest {
         UserEntity databaseUser = new UserEntity();
         databaseUser.setUsername("testuser");
         databaseUser.setPassword("hashedPassword");
-        databaseUser.setSalt("userSalt");
 
         when(userRepo.findByUsername("testuser")).thenReturn(Optional.of(databaseUser));
+        when(hashPassUtil.verifyPassword("wrongPassword", "hashedPassword")).thenReturn(false);
 
-        try (MockedStatic<HashPassUtil> mockedHashUtil = mockStatic(HashPassUtil.class)) {
-            mockedHashUtil.when(() -> HashPassUtil.verifyPassword("wrongPassword", "hashedPassword", "userSalt"))
-                    .thenReturn(false);
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.loginUser(loginAttempt)
+        );
 
-            // Act & Assert
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                    userService.loginUser(loginAttempt)
-            );
-
-            assertEquals("Invalid credentials. Please try again.", exception.getMessage());
-        }
+        assertEquals("Invalid credentials. Please try again.", exception.getMessage());
     }
 
     // ==========================================

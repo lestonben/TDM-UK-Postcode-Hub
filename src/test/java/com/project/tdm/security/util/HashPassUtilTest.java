@@ -1,67 +1,60 @@
 package com.project.tdm.security.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HashPassUtilTest {
 
-    @Test
-    void shouldGenerateUniqueRandomSalts() {
-        // Act
-        String salt1 = HashPassUtil.generateSalt();
-        String salt2 = HashPassUtil.generateSalt();
+    private HashPassUtil hashPassUtil;
 
-        // Assert
-        assertNotNull(salt1);
-        assertNotNull(salt2);
-        assertNotEquals(salt1, salt2, "Salts should be unique and random on every call");
-
-        // Verify it is a valid Base64 string by decoding it without exceptions
-        assertDoesNotThrow(() -> java.util.Base64.getDecoder().decode(salt1));
+    @BeforeEach
+    void setUp() {
+        hashPassUtil = new HashPassUtil();
     }
 
     @Test
-    void shouldProduceConsistentHashedPasswordForSameInputAndSalt() {
+    void shouldProduceValidHashedPassword() {
         // Arrange
         String password = "mySecurePassword123";
-        String salt = HashPassUtil.generateSalt();
 
         // Act
-        String hash1 = HashPassUtil.hashPassword(password, salt);
-        String hash2 = HashPassUtil.hashPassword(password, salt);
+        String hashedPassword = hashPassUtil.hashPassword(password);
+
+        // Assert
+        assertNotNull(hashedPassword);
+        assertNotEquals(password, hashedPassword, "Hashed password should not match plain text");
+        // BCrypt hashes typically start with $2a$ or $2b$ and are 60 characters long
+        assertTrue(hashedPassword.startsWith("$2"), "BCrypt hash should start with version identifier");
+    }
+
+    @Test
+    void shouldProduceDifferentHashesForSamePasswordDueToRandomSalts() {
+        // Arrange
+        String password = "samePassword";
+
+        // Act
+        String hash1 = hashPassUtil.hashPassword(password);
+        String hash2 = hashPassUtil.hashPassword(password);
 
         // Assert
         assertNotNull(hash1);
-        assertEquals(hash1, hash2, "Hashing the same password with the same salt must produce the exact same string");
+        assertNotNull(hash2);
+        // BCrypt automatically uses a fresh random salt every time, yielding different outputs
+        assertNotEquals(hash1, hash2, "Hashing the same password twice must produce different hashes due to auto-salting");
     }
 
     @Test
-    void shouldProduceDifferentHashesForSamePasswordWithDifferentSalts() {
-        // Arrange
-        String password = "samePassword";
-        String salt1 = HashPassUtil.generateSalt();
-        String salt2 = HashPassUtil.generateSalt();
-
-        // Act
-        String hash1 = HashPassUtil.hashPassword(password, salt1);
-        String hash2 = HashPassUtil.hashPassword(password, salt2);
-
-        // Assert
-        assertNotEquals(hash1, hash2, "Different salts must produce completely distinct hash outputs");
-    }
-
-    @Test
-    void shouldReturnTrueWhenVerifyingCorrectPasswordAndSalt() {
+    void shouldReturnTrueWhenVerifyingCorrectPassword() {
         // Arrange
         String password = "userPassword";
-        String salt = HashPassUtil.generateSalt();
-        String storedHash = HashPassUtil.hashPassword(password, salt);
+        String storedHash = hashPassUtil.hashPassword(password);
 
         // Act
-        boolean isValid = HashPassUtil.verifyPassword(password, storedHash, salt);
+        boolean isValid = hashPassUtil.verifyPassword(password, storedHash);
 
         // Assert
-        assertTrue(isValid, "Verification should pass when credentials match the stored hash");
+        assertTrue(isValid, "Verification should pass when the correct password is provided");
     }
 
     @Test
@@ -69,13 +62,20 @@ class HashPassUtilTest {
         // Arrange
         String correctPassword = "userPassword";
         String wrongPassword = "wrongPassword";
-        String salt = HashPassUtil.generateSalt();
-        String storedHash = HashPassUtil.hashPassword(correctPassword, salt);
+        String storedHash = hashPassUtil.hashPassword(correctPassword);
 
         // Act
-        boolean isValid = HashPassUtil.verifyPassword(wrongPassword, storedHash, salt);
+        boolean isValid = hashPassUtil.verifyPassword(wrongPassword, storedHash);
 
         // Assert
         assertFalse(isValid, "Verification should fail if the input password does not match");
+    }
+
+    @Test
+    void shouldHandleNullInputsGracefully() {
+        // Act & Assert
+        assertFalse(hashPassUtil.verifyPassword(null, "someHash"), "Should return false if input password is null");
+        assertFalse(hashPassUtil.verifyPassword("somePassword", null), "Should return false if stored hash is null");
+        assertFalse(hashPassUtil.verifyPassword(null, null), "Should return false if both are null");
     }
 }

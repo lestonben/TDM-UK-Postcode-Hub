@@ -24,9 +24,6 @@ public class UserEntity {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Column(name = "salt", nullable = false, length = 255)
-    private String salt;
-
     @Column(name = "active_status", nullable = false)
     private boolean activeStatus = true;
 
@@ -77,10 +74,6 @@ public class UserEntity {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getSalt() { return salt; }
-
-    public void setSalt(String salt) { this.salt = salt; }
 
     public boolean isActiveStatus() {
         return activeStatus;

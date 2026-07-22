@@ -17,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    @Autowired
+    private HashPassUtil hashPassUtil;
+
     private UserRepo userRepo;
 
     @Autowired
@@ -49,9 +52,7 @@ public class UserServiceImpl implements UserService {
                 .or(() -> checkDuplicateUsername(user))
                 .ifPresent(errMsg -> { throw new IllegalArgumentException(errMsg); });
 
-        String salt = HashPassUtil.generateSalt();
-        user.setSalt(salt);
-        user.setPassword(HashPassUtil.hashPassword(user.getPassword(), salt));
+        user.setPassword(hashPassUtil.hashPassword(user.getPassword()));
 
         userRepo.save(user);
     }
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
                         .flatMap(email -> userRepo.findByEmail(email)))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid credentials. Please try again."));
 
-        if (!HashPassUtil.verifyPassword(user.getPassword(), matchUser.getPassword(), matchUser.getSalt())) {
+        if (!hashPassUtil.verifyPassword(user.getPassword(), matchUser.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials. Please try again.");
         }
 
