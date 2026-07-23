@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UK Postcode Hub - Update Dashboard</title>
-    <!-- Keep the exact same layout stylesheets -->
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
 
-<!-- Top Navigation Bar (Untouched) -->
 <header class="navbar">
     <div class="nav-left">
         <div class="logo">📍</div>
@@ -22,7 +20,6 @@
 </header>
 
 <div class="dashboard-container">
-    <!-- Sidebar (Untouched structure, but shifted active state) -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button id="sidebarToggle" class="toggle-btn">
@@ -30,22 +27,25 @@
             </button>
         </div>
 
-        <!-- REMOVED active class here -->
         <a href="/tdm/dashboard/main" class="sidebar-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,115.55V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V160H112v48a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-72.73a16,16,0,0,1,21.66,0l80,72.73A16,16,0,0,1,224,115.55Z"></path></svg>
-            <span class="sidebar-text">Home</span>
+            <span class="sidebar-text">Route Search</span>
         </a>
 
-        <!-- ADDED active class here -->
         <a href="/tdm/dashboard/update" class="sidebar-item active">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-157.12,74.09l-22.6,22.6A8,8,0,0,1,31,219.31l40-40a8,8,0,0,1,11.31,0l40,40a8,8,0,0,1-11.31,11.32L92.1,211.9A80,80,0,1,0,48,128a8,8,0,0,1-16,0,96,96,0,0,1,192,0Z"></path></svg>
-            <span class="sidebar-text">Update</span>
+            <span class="sidebar-text">Search/Update</span>
+        </a>
+
+        <a href="/tdm/dashboard/role-management" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-157.12,74.09l-22.6,22.6A8,8,0,0,1,31,219.31l40-40a8,8,0,0,1,11.31,0l40,40a8,8,0,0,1-11.31,11.32L92.1,211.9A80,80,0,1,0,48,128a8,8,0,0,1-16,0,96,96,0,0,1,192,0Z"></path></svg>
+            <span class="sidebar-text">Role Management</span>
         </a>
     </aside>
 
     <!-- Main Content Area (Only swap out this inner content!) -->
     <main class="main-content">
-        <h2>Postcode Update</h2>
+        <h2>Postcode Search/Update</h2>
 
         <div class="grid-layout">
             <!-- Left Column: Query Mapping Check -->
@@ -105,7 +105,6 @@
     </main>
 </div>
 
-<!-- Connect a new script file handling the update logic, or keep the sidebar logic shared -->
 <script type="module" src="/js/dashboard-update.js"></script>
 </body>
 </html>
