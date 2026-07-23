@@ -3,6 +3,7 @@ package com.project.tdm.application.service.impl;
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.repository.UserRepo;
 import com.project.tdm.application.service.UserService;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import com.project.tdm.security.util.HashPassUtil;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -28,8 +29,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private Optional<String> checkDuplicateUsername(UserEntity user) {
-        Optional<String> usernameFound = userRepo.existsByUsername(user.getUsername()) ?
-                Optional.of("Username has been taken.") :
+        Optional<String> usernameFound = userRepo.existsByUsernameIgnoreCase(user.getUsername()) ?
+                Optional.of(BaseConstants.USERNAME_USED_MSG) :
                 Optional.empty();
         logger.info("checkDuplicateUsername(): username = {}, isFound = {}", user.getUsername(), usernameFound.isPresent());
 
@@ -37,8 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private Optional<String> checkDuplicateEmail(UserEntity user) {
-        Optional<String> emailFound = userRepo.existsByEmail(user.getEmail()) ?
-                Optional.of("Email has been taken.") :
+        Optional<String> emailFound = userRepo.existsByEmailIgnoreCase(user.getEmail()) ?
+                Optional.of(BaseConstants.EMAIL_USED_MSG) :
                 Optional.empty();
         logger.info("checkDuplicateEmail(): email = {}, isFound = {}", user.getEmail(), emailFound.isPresent());
 
@@ -60,13 +61,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity loginUser(UserEntity user) {
         UserEntity matchUser = Optional.ofNullable(user.getUsername())
-                        .flatMap(username -> userRepo.findByUsername(username))
+                        .flatMap(username -> userRepo.findByUsernameIgnoreCase(username))
                 .or(() -> Optional.ofNullable(user.getEmail())
-                        .flatMap(email -> userRepo.findByEmail(email)))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials. Please try again."));
+                        .flatMap(email -> userRepo.findByEmailIgnoreCase(email)))
+                .orElseThrow(() -> new IllegalArgumentException(BaseConstants.INVALID_CREDENTIAL_MSG));
 
         if (!hashPassUtil.verifyPassword(user.getPassword(), matchUser.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials. Please try again.");
+            throw new IllegalArgumentException(BaseConstants.INVALID_CREDENTIAL_MSG);
         }
 
         return matchUser;
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserByUsername(String username) {
-        UserEntity userEntity = userRepo.findByUsername(username).orElse(null);
+        UserEntity userEntity = userRepo.findByUsernameIgnoreCase(username).orElse(null);
         logger.info("getUserByUsername(): username = {}, resultFound = {}", username, (userEntity != null));
 
         return userEntity;

@@ -2,7 +2,7 @@ package com.project.tdm.application.controller;
 
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.service.UserService;
-import com.project.tdm.application.util.BaseConstants;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import com.project.tdm.security.util.CookieUtil;
 import com.project.tdm.security.util.JwtUtil;
 import jakarta.servlet.http.Cookie;

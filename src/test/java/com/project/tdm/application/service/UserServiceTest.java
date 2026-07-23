@@ -46,8 +46,8 @@ class UserServiceTest {
         inputUser.setEmail("new@example.com");
         inputUser.setPassword("plainPassword");
 
-        when(userRepo.existsByEmail("new@example.com")).thenReturn(false);
-        when(userRepo.existsByUsername("newuser")).thenReturn(false);
+        when(userRepo.existsByEmailIgnoreCase("new@example.com")).thenReturn(false);
+        when(userRepo.existsByUsernameIgnoreCase("newuser")).thenReturn(false);
         when(hashPassUtil.hashPassword("plainPassword")).thenReturn("hashedPassword");
 
         // Act
@@ -65,7 +65,7 @@ class UserServiceTest {
         inputUser.setUsername("user1");
         inputUser.setEmail("duplicate@example.com");
 
-        when(userRepo.existsByEmail("duplicate@example.com")).thenReturn(true);
+        when(userRepo.existsByEmailIgnoreCase("duplicate@example.com")).thenReturn(true);
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
@@ -83,8 +83,8 @@ class UserServiceTest {
         inputUser.setUsername("duplicateUser");
         inputUser.setEmail("unique@example.com");
 
-        when(userRepo.existsByEmail("unique@example.com")).thenReturn(false);
-        when(userRepo.existsByUsername("duplicateUser")).thenReturn(true);
+        when(userRepo.existsByEmailIgnoreCase("unique@example.com")).thenReturn(false);
+        when(userRepo.existsByUsernameIgnoreCase("duplicateUser")).thenReturn(true);
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
@@ -110,7 +110,7 @@ class UserServiceTest {
         databaseUser.setUsername("testuser");
         databaseUser.setPassword("hashedPassword");
 
-        when(userRepo.findByUsername("testuser")).thenReturn(Optional.of(databaseUser));
+        when(userRepo.findByUsernameIgnoreCase("testuser")).thenReturn(Optional.of(databaseUser));
         when(hashPassUtil.verifyPassword("correctPassword", "hashedPassword")).thenReturn(true);
 
         // Act
@@ -132,7 +132,7 @@ class UserServiceTest {
         databaseUser.setEmail("test@example.com");
         databaseUser.setPassword("hashedPassword");
 
-        when(userRepo.findByEmail("test@example.com")).thenReturn(Optional.of(databaseUser));
+        when(userRepo.findByEmailIgnoreCase("test@example.com")).thenReturn(Optional.of(databaseUser));
         when(hashPassUtil.verifyPassword("correctPassword", "hashedPassword")).thenReturn(true);
 
         // Act
@@ -149,7 +149,7 @@ class UserServiceTest {
         UserEntity loginAttempt = new UserEntity();
         loginAttempt.setUsername("nonexistent");
 
-        when(userRepo.findByUsername("nonexistent")).thenReturn(Optional.empty());
+        when(userRepo.findByUsernameIgnoreCase("nonexistent")).thenReturn(Optional.empty());
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
@@ -170,7 +170,7 @@ class UserServiceTest {
         databaseUser.setUsername("testuser");
         databaseUser.setPassword("hashedPassword");
 
-        when(userRepo.findByUsername("testuser")).thenReturn(Optional.of(databaseUser));
+        when(userRepo.findByUsernameIgnoreCase("testuser")).thenReturn(Optional.of(databaseUser));
         when(hashPassUtil.verifyPassword("wrongPassword", "hashedPassword")).thenReturn(false);
 
         // Act & Assert
@@ -191,7 +191,7 @@ class UserServiceTest {
         UserEntity expectedUser = new UserEntity();
         expectedUser.setUsername("existingUser");
 
-        when(userRepo.findByUsername("existingUser")).thenReturn(Optional.of(expectedUser));
+        when(userRepo.findByUsernameIgnoreCase("existingUser")).thenReturn(Optional.of(expectedUser));
 
         // Act
         UserEntity result = userService.getUserByUsername("existingUser");
@@ -204,7 +204,7 @@ class UserServiceTest {
     @Test
     void shouldReturnNullWhenUsernameDoesNotExist() {
         // Arrange
-        when(userRepo.findByUsername("unknownUser")).thenReturn(Optional.empty());
+        when(userRepo.findByUsernameIgnoreCase("unknownUser")).thenReturn(Optional.empty());
 
         // Act
         UserEntity result = userService.getUserByUsername("unknownUser");

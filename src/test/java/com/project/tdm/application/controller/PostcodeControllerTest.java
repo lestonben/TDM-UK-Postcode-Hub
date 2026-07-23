@@ -5,6 +5,7 @@ import com.project.tdm.application.dto.RouteDetailsDTO;
 import com.project.tdm.application.entity.PostcodeEntity;
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.service.PostcodeService;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -106,7 +107,7 @@ class PostcodeControllerTest {
         ResponseEntity<?> response = postcodeController.searchRoute("SW10 0AD", "M1 1AE");
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("An unexpected error occurred. Please try again.", response.getBody());
+        assertEquals(BaseConstants.UNEXPECTED_ERROR_MSG, response.getBody());
     }
 
     // ==========================================
@@ -145,7 +146,7 @@ class PostcodeControllerTest {
         ResponseEntity<?> response = postcodeController.searchPostcode("SW10 0AD");
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("An unexpected error occurred. Please try again.", response.getBody());
+        assertEquals(BaseConstants.UNEXPECTED_ERROR_MSG, response.getBody());
     }
 
     // ==========================================
@@ -181,6 +182,6 @@ class PostcodeControllerTest {
         ResponseEntity<?> response = postcodeController.insertOrUpdatePostcode(params);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("An unexpected error occurred. Please try again.", response.getBody());
+        assertEquals(BaseConstants.UNEXPECTED_ERROR_MSG, response.getBody());
     }
 }

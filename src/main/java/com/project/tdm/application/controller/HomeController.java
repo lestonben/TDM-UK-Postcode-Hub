@@ -3,7 +3,7 @@ package com.project.tdm.application.controller;
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.service.UserService;
 
-import com.project.tdm.application.util.BaseConstants;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import com.project.tdm.security.util.CookieUtil;
 import com.project.tdm.security.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -81,7 +81,7 @@ public class HomeController {
             response.addCookie(cookie);
             logger.info("login(): set JWT string into cookie");
 
-            return ResponseEntity.ok("");
+            return ResponseEntity.ok(BaseConstants.LOGIN_SUCCESS_MSG);
         }
         catch (IllegalArgumentException ex) {
             logger.warn("login(): failed by user = {}, errorMessage = {}", usernameEmail, ex.getMessage());
@@ -89,7 +89,7 @@ public class HomeController {
         }
         catch (Exception ex) {
             logger.error("login(): unexpected error occurred ", ex);
-            return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+            return ResponseEntity.internalServerError().body(BaseConstants.UNEXPECTED_ERROR_MSG);
         }
     }
 
@@ -109,7 +109,7 @@ public class HomeController {
             userService.registerUser(user);
             logger.info("register(): successfully registered account.");
 
-            return ResponseEntity.ok("Account registration successful.");
+            return ResponseEntity.ok(BaseConstants.REGISTER_SUCCESS_MSG);
         }
         catch (IllegalArgumentException ex) {
             logger.warn("register(): failed by user = {}, errorMessage = {}", username, ex.getMessage());
@@ -117,7 +117,7 @@ public class HomeController {
         }
         catch (Exception ex) {
             logger.error("register(): unexpected error occurred by user = " + username, ex);
-            return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+            return ResponseEntity.internalServerError().body(BaseConstants.UNEXPECTED_ERROR_MSG);
         }
     }
 
@@ -126,6 +126,6 @@ public class HomeController {
         Cookie cookie = cookieUtil.setCookieExpired(BaseConstants.JWT_TOKEN);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok().body(Map.of("message", "Successfully logged out."));
+        return ResponseEntity.ok().body(Map.of("message", BaseConstants.LOGOUT_SUCCESS_MSG));
      }
 }

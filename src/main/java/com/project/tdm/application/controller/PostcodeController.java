@@ -4,6 +4,7 @@ import com.project.tdm.application.dto.RouteDetailsDTO;
 import com.project.tdm.application.entity.PostcodeEntity;
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.service.PostcodeService;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import com.project.tdm.security.util.CookieUtil;
 import com.project.tdm.security.util.JwtUtil;
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public class PostcodeController {
         }
         catch (Exception ex) {
             logger.error("suggest(): unexpected error occurred ", ex);
-            return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+            return ResponseEntity.internalServerError().body(BaseConstants.UNEXPECTED_ERROR_MSG);
         }
     }
 
@@ -81,7 +82,7 @@ public class PostcodeController {
         }
         catch (Exception ex) {
             logger.error("searchRoute(): unexpected error occurred ", ex);
-            return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+            return ResponseEntity.internalServerError().body(BaseConstants.UNEXPECTED_ERROR_MSG);
         }
     }
 
@@ -104,7 +105,7 @@ public class PostcodeController {
         }
         catch (Exception ex) {
             logger.error("searchPostcode(): unexpected error occurred ", ex);
-            return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+            return ResponseEntity.internalServerError().body(BaseConstants.UNEXPECTED_ERROR_MSG);
         }
     }
 
@@ -123,7 +124,7 @@ public class PostcodeController {
         }
         catch (Exception ex) {
             logger.error("insertOrUpdatePostcode(): unexpected error occurred ", ex);
-            return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+            return ResponseEntity.internalServerError().body(BaseConstants.UNEXPECTED_ERROR_MSG);
         }
     }
 }

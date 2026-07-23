@@ -1,4 +1,4 @@
-package com.project.tdm.security.util;
+package com.project.tdm.application.utilities.util;
 
 import org.springframework.stereotype.Component;
 

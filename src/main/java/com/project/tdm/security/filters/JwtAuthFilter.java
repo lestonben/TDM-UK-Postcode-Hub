@@ -2,13 +2,12 @@ package com.project.tdm.security.filters;
 
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.service.UserService;
-import com.project.tdm.application.util.BaseConstants;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import com.project.tdm.security.util.CookieUtil;
 import com.project.tdm.security.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
