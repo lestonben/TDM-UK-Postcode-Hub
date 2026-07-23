@@ -99,7 +99,7 @@ class HomeControllerTest {
         assertNotNull(responseBody);
 
         // 3. Compare the body (if you expect an empty string or specific message)
-        assertEquals("", responseBody);
+        assertEquals(BaseConstants.LOGIN_SUCCESS_MSG, responseBody);
     }
 
     @Test
