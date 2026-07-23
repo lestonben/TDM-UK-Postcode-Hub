@@ -26,6 +26,16 @@ export const showError = (elementId, message) => {
     }
 };
 
+// To display success
+export const showSuccess = (elementId, message) => {
+    const el = document.getElementById(elementId);
+    if (el) {
+        el.textContent = message;
+        el.classList.remove('hidden');
+        el.style.color = '#10b981';
+    }
+};
+
 // To control element visibility
 export const hideElement = (idOrElement, isHidden) => {
     const el = typeof idOrElement === 'string' ? document.getElementById(idOrElement) : idOrElement;
@@ -165,5 +175,52 @@ export function initSidebarToggle(sidebarId = 'sidebar', toggleBtnId = 'sidebarT
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
         });
+    }
+}
+
+let widgetId = null;
+
+export function promptRecaptchaModal(siteKey, onSuccessCallback) {
+    const modal = document.getElementById('recaptchaModal');
+    const container = document.getElementById('recaptchaContainer');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+
+    // Check if grecaptcha is ready
+    if (window.grecaptcha && window.grecaptcha.render) {
+        // If the widget hasn't been created yet, render it once
+        if (widgetId === null) {
+            widgetId = window.grecaptcha.render(container, {
+                'sitekey': siteKey,
+                'callback': (token) => {
+                    closeModal();
+                    if (typeof onSuccessCallback === 'function') {
+                        onSuccessCallback(token);
+                    }
+                },
+                'expired-callback': () => {
+                    console.warn('reCAPTCHA token expired.');
+                }
+            });
+        } else {
+            // If it already exists, just reset it so it generates a fresh challenge
+            window.grecaptcha.reset(widgetId);
+        }
+    }
+
+    // Close / Cancel button handler
+    closeModalBtn.onclick = () => {
+        closeModal();
+    };
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        if (widgetId !== null && window.grecaptcha) {
+            window.grecaptcha.reset(widgetId);
+        }
     }
 }

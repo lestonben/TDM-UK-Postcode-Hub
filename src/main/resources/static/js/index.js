@@ -1,76 +1,95 @@
 import * as Utils from '/js/utils.js';
 
+const REGISTER_SITE_KEY = "6LcdQ2AtAAAAABcaItYRyOvu0CqwhaGqgmbSU_Z5";
+
 // --- Event Handlers ---
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+document.getElementById('loginForm').addEventListener('submit', async(e) => {
     e.preventDefault();
 
-    const usernameEmail = document.getElementById('userId').value;
-    const password = document.getElementById('userPass').value;
+    Utils.promptRecaptchaModal(REGISTER_SITE_KEY, async(recaptchaToken) => {
+        const usernameEmail = document.getElementById('userId').value;
+        const password = document.getElementById('userPass').value;
 
-    if (!loginInputValidations(usernameEmail, password)) {
-        return;
-    }
+        if (!loginInputValidations(usernameEmail, password)) {
+            return;
+        }
 
-    const payload = {
+        const payload = {
             usernameEmail: usernameEmail,
             password: password
-    };
+        };
 
-    try {
-        const response = await postAPI('/api/login', payload);
+        try {
+            const response = await postAPI('/api/login', payload);
 
-        if (!response.ok) {
-            const errorMsg = await response.text();
-            Utils.showError('loginError', errorMsg || "Invalid user ID or password.");
-            return;
+            const responseMessage = await response.text();
+            if (!response.ok) {
+                Utils.showError('loginError', responseMessage || "Invalid user ID or password.");
+                return;
+            }
+
+            // Fetch and load dashboard view (fixed double await typo here)
+            const pageResponse = await fetch('/tdm/dashboard/main', {
+                method: 'GET'
+            });
+
+            if (!pageResponse.ok) {
+                Utils.showError('loginError', `Access denied to dashboard (${pageResponse.status}).`);
+                return;
+            }
+            const dashboardHtml = await pageResponse.text();
+
+            Utils.showSuccess('loginError', responseMessage || "Login successful. Auto-redirecting soon..");
+            setTimeout(() => {
+                document.documentElement.innerHTML = dashboardHtml;
+                window.history.pushState({}, '', '/tdm/dashboard/main');
+
+                Utils.reloadScript('/js/dashboard-main.js', 'dashboardEvents', {
+                    username: usernameEmail
+                });
+            }, 1500);
         }
-
-        // Fetch and load dashboard view
-        const pageResponse = await await fetch('/tdm/dashboard/main', { method: 'GET' });
-
-        if (!pageResponse.ok) {
-            Utils.showError('loginError', `Access denied to dashboard (${pageResponse.status}).`);
-            return;
+        catch (err) {
+            Utils.showError('loginError', "Unable to connect to the server. Please check your network.");
         }
-
-        document.documentElement.innerHTML = await pageResponse.text();
-        window.history.pushState({}, '', '/tdm/dashboard/main');
-
-        Utils.reloadScript('/js/dashboard-main.js', 'dashboardEvents', { username: usernameEmail });
-
-    } catch (err) {
-        Utils.showError('loginError', "Unable to connect to the server. Please check your network.");
-    }
+    });
 });
 
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
+document.getElementById('registerForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const username = document.getElementById('usernameInput').value;
-    const email = document.getElementById('emailInput').value;
-    const password = document.getElementById('passInput').value;
+    Utils.promptRecaptchaModal(REGISTER_SITE_KEY, async (recaptchaToken) => {
+        const username = document.getElementById('usernameInput').value;
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passInput').value;
 
-    if (!registerInputValidations(username, email, password)) {
-        return;
-    }
-
-    const payload = {
-        username: username,
-        email: email,
-        password: password
-    };
-
-    try {
-        const response = await postAPI('/api/register', payload);
-        if (response.ok) {
-            window.location.href = '/tdm/home';
-        } else {
-            const errorMessage = await response.text();
-            Utils.showError('regError', errorMessage || "Please retry again later.");
+        if (!registerInputValidations(username, email, password)) {
+            return;
         }
-    } catch (err) {
-        Utils.showError('regError', "Unable to connect to the server. Please check your network.");
-    }
+
+        const payload = {
+            username: username,
+            email: email,
+            password: password
+        };
+
+        try {
+            const response = await postAPI('/api/register', payload);
+
+            const responseMessage = await response.text();
+            if (response.ok) {
+                Utils.showSuccess('regError', responseMessage || "Registration successful!");
+
+                setTimeout(() => {
+                    window.location.href = '/tdm/home';
+                }, 1500);
+            } else {
+                Utils.showError('regError', responseMessage || "Please retry again later.");
+            }
+        } catch (err) {
+            Utils.showError('regError', "Unable to connect to the server. Please check your network.");
+        }
+    });
 });
 
 // --- Input Field Validation ---
@@ -88,19 +107,16 @@ function loginInputValidations(usernameEmail, password) {
 }
 
 function registerInputValidations(username, email, password) {
-    // Check if username is empty
     if (!username || username.trim() === "") {
         Utils.showError('regError', "Please fill in your username.");
         return false;
     }
 
-    // Check if email is empty
     if (!email || email.trim() === "") {
         Utils.showError('regError', "Please fill in your email.");
         return false;
     }
 
-    // Check if password is empty
     if (!password || password.trim() === "") {
         Utils.showError('regError', "Please fill in your password.");
         return false;
