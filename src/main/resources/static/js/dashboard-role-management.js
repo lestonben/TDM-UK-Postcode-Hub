@@ -44,15 +44,26 @@ function cacheDOMElements() {
 /**
  * Reusable helper to generate standard role badges with consistent dynamic colors.
  */
-const availableBadgeClasses = ['role-badge-user', 'role-badge-admin', 'role-badge-manager', 'role-badge-success', 'role-badge-warning'];
 const roleBadgeColorMap = new Map();
-let nextColorIndex = 0;
+
+function getDynamicBadgeColor(roleName) {
+    let hash = 0;
+    for (let i=0; i<roleName.length; i++) {
+        hash = roleName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    const hue = Math.abs(hash) % 360;
+    return `background-color: hsl(${hue}, 80%, 92%); color: hsl(${hue}, 70%, 28%); border: 1px solid hsl(${hue}, 70%, 82%);`;
+}
 
 function createRoleBadge(roleName, extraStyles = '') {
     if (!roleBadgeColorMap.has(roleName)) {
-        roleBadgeColorMap.set(roleName, availableBadgeClasses[nextColorIndex++ % availableBadgeClasses.length]);
+        roleBadgeColorMap.set(roleName, getDynamicBadgeColor(roleName));
     }
-    return `<span class="${roleBadgeColorMap.get(roleName)}" style="${extraStyles}">${roleName}</span>`;
+    const roleBadgeStyle = roleBadgeColorMap.get(roleName);
+    const combineStyle = extraStyles ? `${extraStyles} ${roleBadgeStyle}` : roleBadgeStyle;
+
+    return `<span class="role-badge" style="${combineStyle}">${roleName}</span>`;
 }
 
 /**
