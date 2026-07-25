@@ -1,8 +1,11 @@
 package com.project.tdm.application.service;
 
+import com.project.tdm.application.dto.UserRolesDTO;
+import com.project.tdm.application.entity.RoleEntity;
 import com.project.tdm.application.entity.UserEntity;
 import com.project.tdm.application.repository.UserRepo;
 import com.project.tdm.application.service.impl.UserServiceImpl;
+import com.project.tdm.application.utilities.constant.BaseConstants;
 import com.project.tdm.security.util.HashPassUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,14 +29,19 @@ class UserServiceTest {
     private UserRepo userRepo;
 
     @Mock
-    private HashPassUtil hashPassUtil; // Injected as a mock bean instead of static
+    private HashPassUtil hashPassUtil;
+
+    @Mock
+    private RoleService roleService;
+
+    @Mock
+    private PageService pageService;
 
     @InjectMocks
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
-        // Explicitly set the repository via the setter method used in your implementation
         userService.setUserRepo(userRepo);
     }
 
@@ -46,9 +57,12 @@ class UserServiceTest {
         inputUser.setEmail("new@example.com");
         inputUser.setPassword("plainPassword");
 
+        RoleEntity viewerRole = new RoleEntity(BaseConstants.VIEWER_NAME, BaseConstants.VIEWER_DESC);
+
         when(userRepo.existsByEmailIgnoreCase("new@example.com")).thenReturn(false);
         when(userRepo.existsByUsernameIgnoreCase("newuser")).thenReturn(false);
         when(hashPassUtil.hashPassword("plainPassword")).thenReturn("hashedPassword");
+        when(roleService.getDefaultRole(BaseConstants.VIEWER_NAME, BaseConstants.VIEWER_DESC)).thenReturn(viewerRole);
 
         // Act
         assertDoesNotThrow(() -> userService.registerUser(inputUser));
@@ -211,5 +225,90 @@ class UserServiceTest {
 
         // Assert
         assertNull(result);
+    }
+
+    // ==========================================
+    // generateUsersRoles TESTS
+    // ==========================================
+
+    @Test
+    void shouldGenerateUsersRolesWithoutKeyword() {
+        // Arrange
+        UserEntity user = new UserEntity();
+        user.setUserId(1L);
+        user.setUsername("user1");
+        Page<UserEntity> userPage = new PageImpl<>(List.of(user));
+
+        when(userRepo.findAll(any(Pageable.class))).thenReturn(userPage);
+
+        // Act
+        Map<String, Object> result = userService.generateUsersRoles(null, 0, 10);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1L, result.get("totalItems"));
+        assertEquals(1, result.get("totalPages"));
+        assertTrue(result.get("result") instanceof List);
+    }
+
+    @Test
+    void shouldGenerateUsersRolesWithKeyword() {
+        // Arrange
+        UserEntity user = new UserEntity();
+        user.setUserId(1L);
+        user.setUsername("searchUser");
+        Page<UserEntity> userPage = new PageImpl<>(List.of(user));
+
+        when(userRepo.findByUsernameContainingIgnoreCase(eq("search"), any(Pageable.class))).thenReturn(userPage);
+
+        // Act
+        Map<String, Object> result = userService.generateUsersRoles("search", 0, 10);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1L, result.get("totalItems"));
+    }
+
+    // ==========================================
+    // updateUserRoles TESTS
+    // ==========================================
+
+    @Test
+    void shouldUpdateUserRolesSuccessfully() {
+        // Arrange
+        Long userId = 1L;
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
+        user.setUsername("testuser");
+
+        RoleEntity oldRole = new RoleEntity("Viewer", "Viewer desc");
+        user.addRole(oldRole);
+
+        RoleEntity newRole = new RoleEntity("Admin", "Admin desc");
+
+        when(userRepo.findById(userId)).thenReturn(Optional.of(user));
+        when(roleService.getRolesByRoleNames(any())).thenReturn(Set.of(newRole));
+        when(userRepo.save(any(UserEntity.class))).thenReturn(user);
+
+        // Act
+        assertDoesNotThrow(() -> userService.updateUserRoles(userId, List.of("Admin")));
+
+        // Assert
+        verify(userRepo, times(1)).save(user);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingRolesForNonexistentUser() {
+        // Arrange
+        Long userId = 99L;
+        when(userRepo.findById(userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.updateUserRoles(userId, List.of("Admin"))
+        );
+
+        assertEquals(BaseConstants.ROLE_RECORD_NOT_AVAILABLE, exception.getMessage());
+        verify(userRepo, never()).save(any(UserEntity.class));
     }
 }

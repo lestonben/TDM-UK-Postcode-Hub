@@ -23,11 +23,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class) // Initializes mocks correctly
+@ExtendWith(MockitoExtension.class)
 class PostcodeServiceTest {
 
     @Mock
-    private PostcodeRedisDao postcodeRedisDao; // Changed from @MockBean to @Mock for unit testing
+    private PostcodeRedisDao postcodeRedisDao;
 
     @Mock
     private PostcodeRepo postcodeRepo;
@@ -151,7 +151,7 @@ class PostcodeServiceTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
                 postcodeService.getPostcodesRoute("M1 1AE", "SW10 0AD")
         );
-        assertTrue(ex.getMessage().contains("Both postcodes"));
+        assertEquals("Both postcodes (M1 1AE and SW10 0AD) are unavailable.", ex.getMessage());
     }
 
     // ==========================================
