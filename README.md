@@ -201,6 +201,7 @@ redis-cli ping
     <li><strong>Build:</strong> <code>mvn clean install</code></li>
     <li><strong>Run:</strong> <code>mvn spring-boot:run</code></li>
     <li><strong>Open your webpage:</strong> <a href="http://localhost:8081/">http://localhost:8081/</a></li>
+    <li><i>Note: You are ready to use now! Do not remove role management page access.</i></li>
 </ol>
 
 <hr>
