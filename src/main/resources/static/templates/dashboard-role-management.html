@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Postcode Hub - Role Management</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Page Styles -->
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/role-management.css">
+</head>
+<body>
+
+<!-- Top Navigation Panel -->
+<header class="navbar">
+    <div class="nav-left">
+        <span class="logo">📍</span>
+        <h1>UK Postcode Hub</h1>
+    </div>
+    <div class="nav-right">
+        <span class="user-profile" id="userProfileDisplay">Welcome, User</span>
+        <button id="logoutBtn" class="logout-btn">Log Out</button>
+    </div>
+</header>
+
+<!-- Dashboard Main Container -->
+<div class="dashboard-container">
+
+    <!-- Sidebar Navigation Panel -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button id="sidebarToggle" class="toggle-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>
+            </button>
+        </div>
+
+        <a href="/tdm/dashboard/main" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,115.55V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V160H112v48a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-72.73a16,16,0,0,1,21.66,0l80,72.73A16,16,0,0,1,224,115.55Z"></path></svg>
+            <span class="sidebar-text">Route Search</span>
+        </a>
+
+        <a href="/tdm/dashboard/update" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-157.12,74.09l-22.6,22.6A8,8,0,0,1,31,219.31l40-40a8,8,0,0,1,11.31,0l40,40a8,8,0,0,1-11.31,11.32L92.1,211.9A80,80,0,1,0,48,128a8,8,0,0,1-16,0,96,96,0,0,1,192,0Z"></path></svg>
+            <span class="sidebar-text">Search/Update</span>
+        </a>
+
+        <a href="/tdm/dashboard/role-management" class="sidebar-item active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path></svg>
+            <span class="sidebar-text">Role Management</span>
+        </a>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+        <!-- Page Title Block -->
+        <div class="page-title-block">
+            <h2>Role Management</h2>
+            <p>Configure and assign the roles, accessible pages for system users.</p>
+        </div>
+
+        <!-- Panels Grid -->
+        <div class="panels-grid">
+
+            <!-- TOP TABLE PANEL: Role-to-Page Mappings Table -->
+            <div class="card-panel">
+                <div class="panel-header custom-panel-header">
+                    <div class="panel-header-row">
+                        <div class="panel-header-title-group">
+                            <span class="panel-main-title">
+                                <i class="fa-solid fa-shield-halved icon-primary"></i> Role-to-Page Mappings
+                            </span>
+                            <span class="panel-subtitle">Overview mappings of active roles and their accessible pages.</span>
+                        </div>
+
+                        <!-- Minimize / Collapse Icon Button -->
+                        <button id="roleMappingCollapseBtn" class="collapse-icon-btn" title="Collapse/Expand">
+                            <i id="roleMappingCollapseIcon" class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+
+                    <!-- CONTROLS ROW -->
+                    <div class="controls-row">
+                        <!-- Left: Client-side quick filter -->
+                        <input type="text" id="roleMappingFilter" class="filter-input" placeholder="Filter roles or accessible pages..." />
+
+                        <!-- Right: Action Button to Open Modal -->
+                        <div class="controls-right-group">
+                            <button id="openRoleModalBtn" class="btn-primary-action btn-compact">
+                                <i class="fa-solid fa-plus"></i> New Role Mapping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLLAPSIBLE SECTION -->
+                <div id="roleMappingCollapseSection">
+                    <div class="card-body card-body-flush">
+                        <div class="matrix-table-container">
+                            <table class="matrix-table">
+                                <thead>
+                                <tr>
+                                    <th>Role Name</th>
+                                    <th>Description</th>
+                                    <th>Accessible Pages</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody id="roleMappingBody">
+                                <!-- Dynamic rows populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Control Bar for Role-to-Page Mappings -->
+                        <div id="roleMappingPaginationContainer" class="pagination-bar">
+                            <span id="roleMappingPageInfoDisplay" class="pagination-info">Showing page 1 of 1</span>
+                            <div class="pagination-btn-group">
+                                <button id="roleMappingPrevBtn" class="btn-secondary-action btn-compact" disabled>Previous</button>
+                                <button id="roleMappingNextBtn" class="btn-secondary-action btn-compact" disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM PANEL: View Role Assignments Table -->
+            <div class="card-panel">
+                <div class="panel-header custom-panel-header">
+                    <div class="panel-header-row">
+                        <div class="panel-header-title-group">
+                            <span class="panel-main-title">
+                                <i class="fa-solid fa-table-list icon-primary"></i> User-to-Role Mappings
+                            </span>
+                            <span class="panel-subtitle">Overview mappings of active users and their respective role access.</span>
+                        </div>
+
+                        <!-- Minimize / Collapse Icon Button -->
+                        <button id="collapseBtn" class="collapse-icon-btn" title="Collapse/Expand">
+                            <i id="collapseIcon" class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+
+                    <!-- CONTROLS ROW -->
+                    <div class="controls-row">
+                        <!-- Left: Client-side quick filter -->
+                        <input type="text" id="tableFilter" class="filter-input" placeholder="Filter users or roles..." />
+
+                        <!-- Right: Database Username Search input and Search button bundled together safely -->
+                        <div class="controls-right-group">
+                            <input type="text" id="usernameSearchInput" class="username-search-input" placeholder="Search by username..." />
+                            <button id="searchBtn" class="btn-primary-action btn-compact">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLLAPSIBLE SECTION -->
+                <div id="tableCollapseSection">
+                    <div class="card-body card-body-flush">
+                        <div class="matrix-table-container">
+                            <table class="matrix-table">
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Username</th>
+                                    <th>Assigned Roles</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody id="roleMatrixBody">
+                                <!-- Dynamic rows populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Control Bar -->
+                        <div id="paginationContainer" class="pagination-bar">
+                            <span id="pageInfoDisplay" class="pagination-info">Showing page 1 of 1</span>
+                            <div class="pagination-btn-group">
+                                <button id="prevPageBtn" class="btn-secondary-action btn-compact" disabled>Previous</button>
+                                <button id="nextPageBtn" class="btn-secondary-action btn-compact" disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- POPUP MODAL: Create New Role Mapping -->
+<div id="roleModal" class="modal-overlay">
+    <div class="card-panel modal-card">
+
+        <div class="panel-header modal-header-panel">
+            <span class="modal-title">
+                <i class="fa-solid fa-circle-plus icon-primary"></i> Create New Role Mapping
+            </span>
+            <div class="modal-header-right">
+                <button type="button" id="closeRoleModalBtn" class="modal-close-btn" title="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body modal-body-padding">
+            <form id="createRoleForm" class="modal-form">
+                <div class="management-form-group">
+                    <label>Role Identifier Name</label>
+                    <input type="text" id="roleNameInput" class="form-text-input" placeholder="e.g. ROLE_MODERATOR">
+                </div>
+
+                <div class="management-form-group">
+                    <label>Description</label>
+                    <textarea id="roleDescInput" rows="2" class="form-textarea" placeholder="Brief outline of permissions..."></textarea>
+                </div>
+
+                <!-- Page Access Checkbox Selection Panel -->
+                <div class="management-form-group">
+                    <label class="form-label-block">Select Accessible Pages</label>
+                    <div class="checkbox-scroll-panel">
+
+                        <label class="checkbox-item-label">
+                            <input type="checkbox" name="pageAccess" value="/tdm/dashboard/main" class="form-checkbox">
+                            <div class="checkbox-text-group">
+                                <span class="checkbox-main-text">Route Search</span>
+                                <span class="checkbox-sub-text">(/tdm/dashboard/main)</span>
+                            </div>
+                        </label>
+
+                        <label class="checkbox-item-label">
+                            <input type="checkbox" name="pageAccess" value="/tdm/dashboard/update" class="form-checkbox">
+                            <div class="checkbox-text-group">
+                                <span class="checkbox-main-text">Search/Update</span>
+                                <span class="checkbox-sub-text">(/tdm/dashboard/update)</span>
+                            </div>
+                        </label>
+
+                        <label class="checkbox-item-label">
+                            <input type="checkbox" name="pageAccess" value="/tdm/dashboard/role-management" class="form-checkbox">
+                            <div class="checkbox-text-group">
+                                <span class="checkbox-main-text">Role Management</span>
+                                <span class="checkbox-sub-text">(/tdm/dashboard/role-management)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer-buttons">
+                    <div id="updateStatusBanner" class="error-banner message-banner hidden"></div>
+                    <button id="saveRolePagesDefinitionBtn" type="submit" class="btn-primary-action btn-compact">Save Role Definition</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP MODAL: Update User Roles Mapping -->
+<div id="userRoleModal" class="modal-overlay">
+    <div class="card-panel modal-card">
+
+        <div class="panel-header modal-header-panel">
+            <span class="modal-title">
+                <i class="fa-solid fa-user-shield icon-primary"></i> Edit User Roles
+            </span>
+            <div class="modal-header-right">
+                <button type="button" id="closeUserRoleModalBtn" class="modal-close-btn" title="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body modal-body-padding">
+            <form id="updateUserRoleForm" class="modal-form">
+                <input type="hidden" id="editUserIdInput">
+
+                <div class="management-form-group">
+                    <label>Username</label>
+                    <input type="text" id="editUsernameInput" class="form-text-input" disabled>
+                </div>
+
+                <!-- Role Checkbox Selection Panel -->
+                <div class="management-form-group">
+                    <label class="form-label-block">Assign Roles</label>
+                    <div id="userRolesCheckboxContainer" class="checkbox-scroll-panel">
+                        <!-- Dynamically populated checkboxes go here -->
+                    </div>
+                </div>
+
+                <div class="modal-footer-buttons">
+                    <div id="updateUserStatusBanner" class="error-banner message-banner hidden"></div>
+                    <button id="saveUserRolesBtn" type="submit" class="btn-primary-action btn-compact">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Page Module JavaScript -->
+<script type="module" src="/js/dashboard-role-management.js"></script>
+</body>
+</html>

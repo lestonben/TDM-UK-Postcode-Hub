@@ -57,6 +57,7 @@ function initEventListeners() {
     Utils.setupAutocomplete('postcodeFrom', 'postcodeFromSuggestions');
     Utils.setupAutocomplete('postcodeTo', 'postcodeToSuggestions');
     Utils.initSidebarToggle();
+    Utils.initLogOutFunction();
 
     // Context changes dynamic tracking configurations
     const trackInputChanges = () => {
@@ -130,17 +131,6 @@ function initEventListeners() {
             console.error("API Error context stack trace log:", err);
             Utils.showError('searchResult', 'Unable to query API. Network error.');
         }
-    });
-
-    // Unified Clean Sign Out Handler
-    document.getElementById('logoutBtn')?.addEventListener('click', async (logoutEvent) => {
-        logoutEvent.preventDefault();
-        try {
-            await fetch('/api/logout', { method: 'POST' });
-        } catch (err) {
-            console.error("Logout request failed:", err);
-        }
-        window.location.assign('/tdm/home');
     });
 }
 

@@ -331,16 +331,46 @@ body {
 }
 
 .input-field-group-postcode-from input, .input-field-group-postcode-to input {
-    width: 100%;
-    border: none;
-    outline: none;
+    width: 100% !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
     font-size: 14px;
     color: var(--text-main);
-    background: transparent;
 }
 
 .input-field-group-postcode-from input::placeholder, .input-field-group-postcode-to input::placeholder {
     color: var(--text-muted);
+}
+
+#displayBox {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    text-align: left;
+    padding: 8px 0;
+}
+
+.result-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.result-detail-item strong {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.result-detail-item span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1e293b;
 }
 
 /* Circular swap button styling */
@@ -746,4 +776,263 @@ code.json-display {
     color: #64748b;
     text-align: center;
     line-height: 1.5;
+}
+
+/* ==========================================================================
+   Role Management Specific Styles & Extensions
+   ========================================================================== */
+
+/* Layout Grid Enhancements for Split Panels */
+.grid-cols-12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+@media (min-width: 1024px) {
+    .lg\:col-span-5 {
+        grid-column: span 5 / span 5;
+    }
+    .lg\:col-span-7 {
+        grid-column: span 7 / span 7;
+    }
+    .lg\:col-span-12 {
+        grid-column: span 12 / span 12;
+    }
+}
+
+.gap-6 {
+    gap: 24px;
+}
+
+.pb-12 {
+    padding-bottom: 48px;
+}
+
+/* Form Controls & Inputs integration with existing variables */
+.card-panel form textarea,
+.card-panel form select,
+.card-panel form input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--text-main);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-panel form textarea:focus,
+.card-panel form select:focus,
+.card-panel form input[type="text"]:focus {
+    border-color: var(--primary-blue);
+    background-color: var(--card-bg);
+    box-shadow: 0 0 0 3px rgba(29, 114, 214, 0.15);
+}
+
+.card-panel form textarea {
+    resize: vertical;
+}
+
+/* Form Action Buttons */
+.btn-primary-action {
+    width: 100%;
+    background-color: var(--primary-blue);
+    color: white !important;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-primary-action:hover {
+    background-color: var(--primary-blue-hover);
+    color: black !important;
+}
+
+.btn-dark-action {
+    width: 100%;
+    background-color: var(--nav-bg);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-dark-action:hover {
+    background-color: #1e293b;
+}
+
+/* Badges for roles and types */
+.badge-master {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge-bridge {
+    background-color: #f0fdf4;
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.role-badge-admin {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #f3e8ff;
+    color: #6b21a8;
+    border: 1px solid #e9d5ff;
+    margin-right: 6px;
+}
+
+.role-badge-manager {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+    margin-right: 6px;
+}
+
+.role-badge-user {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+}
+
+/* Data Table Styles for Assignments Matrix */
+.matrix-table-container {
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+.matrix-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.matrix-table th {
+    background-color: #f8fafc;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.matrix-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.matrix-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.table-action-edit {
+    color: #2563eb;
+    background: none;
+    border: none;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 12px;
+}
+
+.table-action-edit:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.table-action-delete {
+    color: #e11d48;
+    background: none;
+    border: none;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.table-action-delete:hover {
+    color: #be123c;
+    text-decoration: underline;
+}
+
+/* Consistent Button Design for Previous, Next, and Cancel */
+.btn-cancel,
+.btn-previous,
+.btn-next {
+    background: #ffffff;
+}
+
+.btn-compact,
+.btn-cancel,
+.btn-previous,
+.btn-next {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 6px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-compact:hover,
+.btn-cancel:hover,
+.btn-previous:hover,
+.btn-next:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.btn-compact:active,
+.btn-cancel:active,
+.btn-previous:active,
+.btn-next:active {
+    background: #e2e8f0;
 }

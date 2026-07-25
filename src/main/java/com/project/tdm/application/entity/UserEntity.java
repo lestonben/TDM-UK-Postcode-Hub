@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.*;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +35,14 @@ public class UserEntity {
     @UpdateTimestamp
     @Column(name = "modified_date", nullable = false)
     private LocalDateTime modifiedDate;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> userRoles = new HashSet<>();
 
     public UserEntity(){}
 
@@ -97,5 +106,23 @@ public class UserEntity {
 
     public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Set<RoleEntity> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<RoleEntity> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public void addRole(RoleEntity role) {
+        this.userRoles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(RoleEntity role) {
+        this.userRoles.remove(role);
+        role.getUsers().remove(this);
     }
 }

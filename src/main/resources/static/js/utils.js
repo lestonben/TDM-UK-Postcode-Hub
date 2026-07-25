@@ -50,6 +50,23 @@ export const clearFields = (containerId) => {
         .forEach(input => input.value = '');
 };
 
+// Shared Component: Standard UI Logout API Function
+export async function initLogOutFunction() {
+    const logOutBtn = document.getElementById('logoutBtn');
+
+    logOutBtn.addEventListener('click', async (logOutEvent) => {
+        logOutEvent.preventDefault();
+
+        try {
+            await fetch('/api/logout', { method: 'POST' });
+        }
+        catch (err) {
+            console.error("Logout request failed:", err);
+        }
+        window.location.assign('/tdm/home');
+    });
+}
+
 // To load username of the current profile
 export async function fetchAndSetUserProfile(username) {
     const userProfileSpan = document.querySelector('.user-profile');

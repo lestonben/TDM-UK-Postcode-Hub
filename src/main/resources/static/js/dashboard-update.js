@@ -61,6 +61,7 @@ function initEventListeners() {
     // Utilize shared modules from utils.js
     Utils.setupAutocomplete('queryPostcode', 'postcodeSuggestions');
     Utils.initSidebarToggle();
+    Utils.initLogOutFunction();
 
     // Event listeners tracking dynamic validation states
     queryInput.addEventListener('input', validateQueryInput);
@@ -152,17 +153,6 @@ function initEventListeners() {
             statusBanner.className = "message-banner error";
             statusBanner.textContent = "Unable to use create or update API. Network error.";
         }
-    });
-
-    // Unified Clean Sign Out Handler
-    document.getElementById('logoutBtn')?.addEventListener('click', async (logoutEvent) => {
-        logoutEvent.preventDefault();
-        try {
-            await fetch('/api/logout', { method: 'POST' });
-        } catch (err) {
-            console.error("Logout request failed:", err);
-        }
-        window.location.assign('/tdm/home');
     });
 }
 

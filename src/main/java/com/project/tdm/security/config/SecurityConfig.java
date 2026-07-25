@@ -1,6 +1,7 @@
 package com.project.tdm.security.config;
 
 import com.project.tdm.security.filters.JwtAuthFilter;
+import com.project.tdm.security.filters.PageAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,9 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
+
+    @Autowired
+    private PageAuthFilter pageAuthFilter;
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
@@ -50,7 +54,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(pageAuthFilter, JwtAuthFilter.class);
         return http.build();
     }
 }
