@@ -1,6 +1,6 @@
 <div align="center">
     <h1>TDM-UK-Postcode-Hub</h1>
-    <p><strong>A robust, secure backend solution for managing UK postcode data and user authentication.</strong></p>
+    <p><strong>A robust, secure backend solution for managing UK postcode data, user authentication, and role-based access control.</strong></p>
 </div>
 
 <hr>
@@ -8,8 +8,9 @@
 <h2>✨ Key Features</h2>
 <ul>
     <li>🔐 <strong>Secure Authentication:</strong> JWT-based authentication with secure cookie handling.</li>
-    <li>👤 <strong>User Management:</strong> Seamless registration and login endpoints with input validation.</li>
-    <li>🗄️ <strong>Data Handling:</strong> Integrated database management for user and postcode datasets.</li>
+    <li>👤 <strong>User Management:</strong> Seamless registration, login endpoints, and user-to-role assignment capabilities.</li>
+    <li>🛡️ <strong>Role & Access Control:</strong> Comprehensive role management system to control page access and administrative privileges.</li>
+    <li>🗄️ <strong>Data Handling:</strong> Integrated database management for user, role, and postcode datasets.</li>
     <li>🔍 <strong>Advanced Logging:</strong> Structured, level-based logging for easier debugging and monitoring.</li>
 </ul>
 
@@ -101,6 +102,54 @@
       <td><code>/api/postcodes/insertOrUpdate</code></td>
       <td>Inserts or updates postcode records.</td>
     </tr>
+    <tr>
+      <td>🔑</td>
+      <td>GET</td>
+      <td><code>/api/roles/getAllRolesList</code></td>
+      <td>Retrieves a list of all role names.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>GET</td>
+      <td><code>/api/roles/getRolesPagesList</code></td>
+      <td>Retrieves paginated list of roles and page access mappings.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>GET</td>
+      <td><code>/api/roles/getUsersRolesList</code></td>
+      <td>Retrieves user roles with search/keyword filtering and pagination.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>POST</td>
+      <td><code>/api/roles/createRolePages</code></td>
+      <td>Creates a new role with assigned page access permissions.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>POST</td>
+      <td><code>/api/roles/updateRolePages</code></td>
+      <td>Updates an existing role's description and page access URLs.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>DELETE</td>
+      <td><code>/api/roles/deleteRole</code></td>
+      <td>Deletes a specific role by ID.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>GET</td>
+      <td><code>/api/roles/getRoleUserCount</code></td>
+      <td>Gets the total count of users assigned to a specific role.</td>
+    </tr>
+    <tr>
+      <td>🔑</td>
+      <td>POST</td>
+      <td><code>/api/roles/updateUserRoles</code></td>
+      <td>Updates the assigned roles for a specific user.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -152,6 +201,7 @@ redis-cli ping
     <li><strong>Build:</strong> <code>mvn clean install</code></li>
     <li><strong>Run:</strong> <code>mvn spring-boot:run</code></li>
     <li><strong>Open your webpage:</strong> <a href="http://localhost:8081/">http://localhost:8081/</a></li>
+    <li><i>Note: You are ready to use now! Do not remove role management page access.</i></li>
 </ol>
 
 <hr>
@@ -160,26 +210,67 @@ redis-cli ping
 
 <ul>
     <li>
-        <strong><code style="font-size: 115%; font-family: inherit;">/tdm/home</code> (Login)</strong>
+        <strong>Login</strong>
         <br>
-        <img src="src/main/resources/static/assets/screenshots/login_ui.png" alt="Login Screen" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/login.png" alt="Login Screen" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <li>
+        <strong>Login/Register with Recaptcha</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/login-register-recaptcha.jpg" alt="Login Screen" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
     <br>
     <li>
-        <strong><code style="font-size: 115%; font-family: inherit;">/tdm/dashboard/main</code> (Search Postcode)</strong>
+        <strong>Display Postcode Suggestions</strong>
         <br>
-        <img src="src/main/resources/static/assets/screenshots/main_search_ui.png" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/dashboard-route-search-postcode-suggestion.jpg" alt="Search Results" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
     <br>
     <li>
-        <strong><code style="font-size: 115%; font-family: inherit;">/tdm/dashboard/main</code> (Display Route Result)</strong>
+        <strong>Search Route</strong>
         <br>
-        <img src="src/main/resources/static/assets/screenshots/main_result_ui.png" alt="Search Results" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/dashboard-route-search.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
     <br>
     <li>
-        <strong><code style="font-size: 115%; font-family: inherit;">/tdm/dashboard/update</code> (Database Management)</strong>
+        <strong>Search Postcode Details</strong>
         <br>
-        <img src="src/main/resources/static/assets/screenshots/update_ui.png" alt="Update Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+        <img src="src/main/resources/static/assets/screenshots/dashboard-updatesearch-search-result.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <br>
+    <li>
+        <strong>Create/Update Postcode Input Validations</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/dashboard-updatesearch-update-validation.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <br>
+    <li>
+        <strong>Create/Update Postcode Result</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/dashboard-updatesearch-update-result.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <br>
+    <li>
+        <strong>User Roles & Access Pages Management</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/dashboard-role-management.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <br>
+    <li>
+        <strong>Role to Access Pages Update</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/dashboard-role-management-update-role.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <br>
+    <li>
+        <strong>User to Roles Update</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/dashboard-role-management-update-user-roles.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
+    </li>
+    <br>
+    <li>
+        <strong>Access Denied View</strong>
+        <br>
+        <img src="src/main/resources/static/assets/screenshots/dashboard-access-denied.jpg" alt="Search Interface" style="width: 75%; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px;">
     </li>
 </ul>
