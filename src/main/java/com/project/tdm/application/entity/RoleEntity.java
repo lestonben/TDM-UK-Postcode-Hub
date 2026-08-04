@@ -16,7 +16,7 @@ public class RoleEntity {
     @Column(name = "role_name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "role_desc", nullable = false, unique = true)
+    @Column(name = "role_desc", nullable = false)
     private String description;
 
     @ManyToMany(mappedBy = "userRoles")
