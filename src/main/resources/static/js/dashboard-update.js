@@ -81,6 +81,7 @@ function initEventListeners() {
         const targetCode = queryInput.value.trim().toUpperCase();
         if (!targetCode) return;
 
+        searchBtn.disabled = true;
         displayBox.className = "query-result-box";
         displayBox.innerHTML = "Searching records...";
 
@@ -99,6 +100,7 @@ function initEventListeners() {
                     <div class="result-detail-item"><strong>Latitude:</strong> <span>${postcodeDetail.latitude}</span></div>
                     <div class="result-detail-item"><strong>Longitude:</strong> <span>${postcodeDetail.longitude}</span></div>
                 `;
+                queryInput.value = '';
             } else {
                 displayBox.className = "query-result-box empty";
                 displayBox.innerHTML = `No record found for "${targetCode}".`;
@@ -127,6 +129,7 @@ function initEventListeners() {
             longitude: lngVal
         };
 
+        btnSubmitUpdate.disabled = true;
         statusBanner.className = "message-banner";
         statusBanner.textContent = "Saving changes...";
         statusBanner.style.display = "block";
@@ -142,16 +145,21 @@ function initEventListeners() {
 
             if (response.ok) {
                 statusBanner.className = "message-banner success";
-                statusBanner.textContent = message;
+                statusBanner.textContent = "[" + inputPostcode.value + "]: " + message;
                 updateForm.reset();
                 validateUpdateFormInputs(); // Recalculate component button states after explicit form resets
             } else {
                 statusBanner.className = "message-banner error";
-                statusBanner.textContent = message;
+                statusBanner.textContent = "[" + inputPostcode.value + "]: " + message;
             }
         } catch (err) {
             statusBanner.className = "message-banner error";
             statusBanner.textContent = "Unable to use create or update API. Network error.";
+        } finally {
+            setTimeout(() => {
+                statusBanner.className = "message-banner hidden";
+                statusBanner.textContent = "";
+            }, 10000);
         }
     });
 }

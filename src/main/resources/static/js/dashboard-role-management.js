@@ -42,6 +42,23 @@ function cacheDOMElements() {
 }
 
 /**
+ * Create New Role Mapping Input Validations
+ */
+function validateRoleFormInputs() {
+    const roleName = roleNameInput.value.trim();
+    const roleDesc = roleDescInput.value.trim();
+    const selectedPages = document.querySelectorAll('input.form-checkbox:checked');
+
+    // Enable button ONLY if all criteria are met
+    if (roleName !== "" && roleDesc !== "" && selectedPages.length > 0) {
+        saveRolePagesDefinitionBtn.disabled = false;
+    }
+    else {
+        saveRolePagesDefinitionBtn.disabled = true;
+    }
+}
+
+/**
  * Reusable helper to generate standard role badges with consistent dynamic colors.
  */
 const roleBadgeColorMap = new Map();
@@ -136,6 +153,7 @@ function toggleModal(show, editMode = false) {
         isEditMode = false;
         currentEditingRoleId = null;
         if (roleNameInput) roleNameInput.disabled = false;
+        saveRolePagesDefinitionBtn.disabled = false;
     }
 }
 
@@ -146,6 +164,7 @@ function toggleUserRoleModal(show) {
         currentEditingUserId = null;
         if (updateUserStatusBanner) updateUserStatusBanner.className = "hidden";
     }
+    saveUserRolesBtn.disabled = false;
 }
 
 async function fetchAllRoles() {
@@ -166,6 +185,14 @@ async function fetchAllRoles() {
 function initEventListeners() {
     Utils.initSidebarToggle();
     Utils.initLogOutFunction();
+
+    roleNameInput.addEventListener('input', validateRoleFormInputs);
+    roleDescInput.addEventListener('input', validateRoleFormInputs);
+
+    // Listen to changes on all page access checkboxes
+    document.querySelectorAll('input.form-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', validateRoleFormInputs);
+    });
 
     // Live filter search for Role Assignment Matrix table
     if (tableFilter && roleMatrixBody) {
@@ -197,6 +224,8 @@ function initEventListeners() {
 
     if (openRoleModalBtn) {
         openRoleModalBtn.addEventListener('click', () => {
+            validateRoleFormInputs();
+
             currentEditingRoleId = null;
             if (roleNameInput) { roleNameInput.value = ''; roleNameInput.disabled = false; }
             if (roleDescInput) roleDescInput.value = '';
@@ -255,6 +284,7 @@ function initEventListeners() {
                     body: JSON.stringify(payload)
                 });
 
+                saveRolePagesDefinitionBtn.disabled = true;
                 const responseMessage = await response.text();
                 statusBanner.className = `message-banner ${response.ok ? 'success' : 'error'}`;
                 statusBanner.textContent = responseMessage;
@@ -268,7 +298,7 @@ function initEventListeners() {
                         toggleModal(false, false);
                         loadRolesPages(currentRoleMappingPage);
                         fetchAllRoles();
-                    }, 1500);
+                    }, 3000);
                 }
             } catch (error) {
                 statusBanner.className = "message-banner error";
@@ -296,6 +326,7 @@ function initEventListeners() {
                     body: JSON.stringify(payload)
                 });
 
+                saveUserRolesBtn.disabled = true;
                 const responseMessage = await response.text();
                 updateUserStatusBanner.className = `message-banner ${response.ok ? 'success' : 'error'}`;
                 updateUserStatusBanner.textContent = responseMessage;
@@ -304,7 +335,7 @@ function initEventListeners() {
                     setTimeout(() => {
                         toggleUserRoleModal(false);
                         loadUsersRoles(currentPage);
-                    }, 1500);
+                    }, 3000);
                 }
             } catch (error) {
                 updateUserStatusBanner.className = "message-banner error";

@@ -123,7 +123,7 @@ public class PostcodeServiceImpl implements PostcodeService {
     private RouteDetailsDTO generateRouteDetails(String formattedFrom, String formattedTo, String firstPostcode, String secondPostcode) {
         logger.info("generateRouteDetails(): getting postcode details for postcodeFrom = {}, postcodeTo = {}", firstPostcode, secondPostcode);
 
-        List<PostcodeEntity> postcodeList = getPostcodes(firstPostcode, secondPostcode);
+        List<PostcodeEntity> postcodeList = getPostcodes(formattedFrom, formattedTo, firstPostcode, secondPostcode);
         PostcodeEntity postcodeFrom = postcodeList.stream().filter(p -> p.getPostcode().equals(formattedFrom)).findFirst().orElse(null);
         PostcodeEntity postcodeTo = postcodeList.stream().filter(p -> p.getPostcode().equals(formattedTo)).findFirst().orElse(null);
 
@@ -140,7 +140,7 @@ public class PostcodeServiceImpl implements PostcodeService {
                 distance);
     }
 
-    private List<PostcodeEntity> getPostcodes(String postcodeFrom, String postcodeTo) {
+    private List<PostcodeEntity> getPostcodes(String formattedFrom, String formattedTo, String postcodeFrom, String postcodeTo) {
         logger.info("getPostcodes(): searching postcode details from DB, for postcodeFrom = {}, postcodeTo = {}", postcodeFrom, postcodeTo);
 
         List<PostcodeEntity> results = postcodeRepo.findPostcodes(postcodeFrom, postcodeTo);
@@ -151,12 +151,12 @@ public class PostcodeServiceImpl implements PostcodeService {
 
         results = results != null ? results : List.of();
 
-        boolean isFromFound = results.stream().map(PostcodeEntity::getPostcode).anyMatch(postal -> postal.equals(postcodeFrom));
-        boolean isToFound = results.stream().map(PostcodeEntity::getPostcode).anyMatch(postal -> postal.equals(postcodeTo));
+        boolean isFromFound = results.stream().map(PostcodeEntity::getPostcode).anyMatch(postal -> postal.equals(formattedFrom));
+        boolean isToFound = results.stream().map(PostcodeEntity::getPostcode).anyMatch(postal -> postal.equals(formattedTo));
 
-        String errorMessage = (!isFromFound && !isToFound) ? "Both postcodes (" + postcodeFrom + " and " + postcodeTo + ") are unavailable."
-                : (!isFromFound) ? "Starting postcode (" + postcodeFrom + ") is unavailable."
-                : "Destination postcode (" + postcodeTo + ") is unavailable.";
+        String errorMessage = (!isFromFound && !isToFound) ? "Both postcodes (" + formattedFrom + " and " + formattedTo + ") are unavailable."
+                : (!isFromFound) ? "Starting postcode (" + formattedFrom + ") is unavailable."
+                : "Destination postcode (" + formattedTo + ") is unavailable.";
 
         logger.warn("getPostcode(): failed with reason: {}", errorMessage);
         throw new IllegalArgumentException(errorMessage);
