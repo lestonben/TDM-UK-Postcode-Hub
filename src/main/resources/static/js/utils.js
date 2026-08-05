@@ -241,3 +241,13 @@ export function promptRecaptchaModal(siteKey, onSuccessCallback) {
         }
     }
 }
+
+// Retrieve CSRF token
+export const getCsrfToken = () => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; XSRF-TOKEN=`);
+    if (parts.length === 2) {
+        return decodeURIComponent(parts.pop().split(';').shift());
+    }
+    return '';
+}

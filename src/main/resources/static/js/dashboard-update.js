@@ -137,7 +137,10 @@ function initEventListeners() {
         try {
             const response = await fetch('/api/postcodes/insertOrUpdate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': Utils.getCsrfToken()
+                },
                 body: JSON.stringify(payload)
             });
 

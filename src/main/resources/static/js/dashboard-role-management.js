@@ -280,7 +280,10 @@ function initEventListeners() {
             try {
                 const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-XSRF-TOKEN': Utils.getCsrfToken()
+                    },
                     body: JSON.stringify(payload)
                 });
 
@@ -322,7 +325,10 @@ function initEventListeners() {
             try {
                 const response = await fetch('/api/roles/updateUserRoles', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-XSRF-TOKEN': Utils.getCsrfToken()
+                    },
                     body: JSON.stringify(payload)
                 });
 
