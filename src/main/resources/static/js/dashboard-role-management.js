@@ -206,10 +206,13 @@ function initEventListeners() {
 
     // Role-to-Pages Live Search Input & Enter Key Trigger
     const roleMappingFilter = document.getElementById('roleMappingFilter');
-    if (roleMappingFilter) {
-        const triggerSearch = () => loadRolesPages(0);
-        roleMappingFilter.addEventListener('input', triggerSearch);
-        roleMappingFilter.addEventListener('keypress', (e) => e.key === 'Enter' && triggerSearch());
+    if (roleMappingFilter && roleMappingBody) {
+        roleMappingFilter.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            roleMappingBody.querySelectorAll('tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+            });
+        });
     }
 
     // Initialize Collapses
