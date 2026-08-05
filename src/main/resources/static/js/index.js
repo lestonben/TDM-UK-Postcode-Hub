@@ -157,7 +157,10 @@ window.addEventListener('pageshow', (event) => {
 async function postAPI(url, payload) {
     return fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': Utils.getCsrfToken()
+        },
         body: JSON.stringify(payload)
     });
 }
