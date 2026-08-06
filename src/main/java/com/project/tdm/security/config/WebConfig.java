@@ -17,6 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addViewController(BaseConstants.DASHBOARD_UPDATE_URL).setViewName("forward:/templates/dashboard-update.html");
 
+        registry.addViewController(BaseConstants.DASHBOARD_IMPORT_URL).setViewName("forward:/templates/dashboard-import.html");
+
         registry.addViewController(BaseConstants.DASHBOARD_ROLE_MANAGEMENT_URL).setViewName("forward:/templates/dashboard-role-management.html");
 
         registry.addViewController(BaseConstants.ERROR_PAGE_URL).setViewName("forward:/templates/error-page.html");

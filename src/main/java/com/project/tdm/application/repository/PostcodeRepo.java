@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostcodeRepo extends JpaRepository<PostcodeEntity, Long> {
+public interface PostcodeRepo extends JpaRepository<PostcodeEntity, Long>, PostcodeBatchRepo {
     @Query("SELECT p FROM PostcodeEntity p WHERE p.postcode = :postcode")
     Optional<PostcodeEntity> findPostcode(@Param("postcode") String postcode);
 

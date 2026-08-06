@@ -41,6 +41,8 @@ public class BaseConstants {
     public static final String DASHBOARD_MAIN_URL = "/tdm/dashboard/main";
     public static final String DASHBOARD_UPDATE_NAME = "Search/Update";
     public static final String DASHBOARD_UPDATE_URL = "/tdm/dashboard/update";
+    public static final String DASHBOARD_IMPORT_NAME = "Data Import";
+    public static final String DASHBOARD_IMPORT_URL = "/tdm/dashboard/import";
     public static final String DASHBOARD_ROLE_MANAGEMENT_NAME = "Role Management";
     public static final String DASHBOARD_ROLE_MANAGEMENT_URL = "/tdm/dashboard/role-management";
     public static final String ERROR_PAGE_URL = "/tdm/access-denied";

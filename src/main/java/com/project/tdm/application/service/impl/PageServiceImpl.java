@@ -25,6 +25,7 @@ public class PageServiceImpl implements PageService {
         return new HashMap<>(){{
             put(BaseConstants.DASHBOARD_MAIN_NAME, BaseConstants.DASHBOARD_MAIN_URL);
             put(BaseConstants.DASHBOARD_UPDATE_NAME, BaseConstants.DASHBOARD_UPDATE_URL);
+            put(BaseConstants.DASHBOARD_IMPORT_NAME, BaseConstants.DASHBOARD_IMPORT_URL);
             put(BaseConstants.DASHBOARD_ROLE_MANAGEMENT_NAME, BaseConstants.DASHBOARD_ROLE_MANAGEMENT_URL);
         }};
     }

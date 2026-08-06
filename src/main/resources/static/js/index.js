@@ -6,7 +6,7 @@ const REGISTER_SITE_KEY = "6LcdQ2AtAAAAABcaItYRyOvu0CqwhaGqgmbSU_Z5";
 document.getElementById('loginForm').addEventListener('submit', async(e) => {
     e.preventDefault();
 
-    Utils.promptRecaptchaModal(REGISTER_SITE_KEY, async(recaptchaToken) => {
+    //Utils.promptRecaptchaModal(REGISTER_SITE_KEY, async(recaptchaToken) => {
         const usernameEmail = document.getElementById('userId').value;
         const password = document.getElementById('userPass').value;
 
@@ -52,7 +52,7 @@ document.getElementById('loginForm').addEventListener('submit', async(e) => {
         catch (err) {
             Utils.showError('loginError', "Unable to connect to the server. Please check your network.");
         }
-    });
+    //});
 });
 
 document.getElementById('registerForm').addEventListener('submit', (e) => {
