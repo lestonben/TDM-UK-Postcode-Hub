@@ -5,9 +5,14 @@ public class PostcodeValidationUtil {
     private static final String POSTCODE_REGEX = "^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$";
 
     public static boolean isValidPostcode(String postcode) {
-        if (postcode == null) return false;
-        // Remove spaces for uniform checking, or match against standard format
-        return postcode.matches(POSTCODE_REGEX);
+        if (postcode == null || postcode.trim().isEmpty()) {
+            return false;
+        }
+
+        // Sanitize: convert to uppercase and normalize spaces
+        String cleanPostcode = postcode.trim().toUpperCase();
+
+        return cleanPostcode.matches(POSTCODE_REGEX);
     }
 
     public static boolean isValidCoordinates(Double lat, Double lon) {
